@@ -6,110 +6,197 @@
 /*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:46:31 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/14 14:04:52 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/14 20:11:52 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*philo1(void *data)
+u_int64_t	get_time(void)
 {
-	t_data	*sdata;
+	struct timeval	tp;
+	u_int64_t		milliseconds;
 
-	sdata = data;
-	sleep(1);
-	printf("\033[0;33mPhilo n_%i is thinking\033[0m\n", *sdata->n1);
-	pthread_mutex_lock(sdata->vilka_levaya);
-	pthread_mutex_lock(sdata->vilka_pravaya);
-	printf("\033[0;31mPhilo n_%i is eating\033[0m\n", *sdata->n1);
-	sleep(1);
-	pthread_mutex_unlock(sdata->vilka_levaya);
-	pthread_mutex_unlock(sdata->vilka_pravaya);
-	printf("\033[0;30mPhilo n_%i is sleeping\033[0m\n", *sdata->n1);
-	sleep(1);
+	gettimeofday(&tp, NULL);
+	milliseconds = tp.tv_sec * 1000;
+	milliseconds += tp.tv_usec / 1000;
+	return (milliseconds);
+}
+
+u_int64_t	timestamp(t_data *data)
+{
+	return (get_time() - data->start_time);
+}
+
+void	*killer(void *data)
+{
+	t_philo	*philo;
+
+	philo = data;
+	while (1)
+	{
+		if ((get_time() - philo->data->start_time) > (unsigned long int)philo->data->time_to_die)
+			break;
+	}
+	philo->dead = true;
 	return (0);
 }
 
-void	*philo2(void *data)
+void	excluded_printf(t_philo *philo, char *code)
 {
-	t_data	*sdata;
+	pthread_mutex_lock(&philo->data->mutexes[PRINT]);
+	printf("%lums %i %s\n", timestamp(philo->data), philo->id, code);
+	pthread_mutex_unlock(&philo->data->mutexes[PRINT]);
+}
 
-	sdata = data;
-	printf("\033[0;33mPhilo n_%i is thinking\033[0m\n", *sdata->n2);
-	pthread_mutex_lock(sdata->vilka_levaya);
-	pthread_mutex_lock(sdata->vilka_pravaya);
-	printf("\033[0;31mPhilo n_%i is eating\033[0m\n", *sdata->n2);
-	sleep(1);
-	pthread_mutex_unlock(sdata->vilka_levaya);
-	pthread_mutex_unlock(sdata->vilka_pravaya);
-	printf("\033[0;30mPhilo n_%i is sleeping\033[0m\n", *sdata->n2);
-	sleep(1);
+void	*ft_philo(void *data)
+{
+	t_philo	*philo;
+
+	philo = data;
+	if ((philo->id % 2) == 0)
+		usleep(1000);
+	while (1)
+	{
+		excluded_printf(philo, THINK);
+		pthread_mutex_lock(&philo->forks[philo->left_fork]);
+		excluded_printf(philo, FORK);
+		pthread_mutex_lock(&philo->forks[philo->right_fork]);
+		excluded_printf(philo, FORK);
+		excluded_printf(philo, EAT);
+		usleep(philo->data->time_to_eat);
+		pthread_mutex_unlock(&philo->forks[philo->left_fork]);
+		pthread_mutex_unlock(&philo->forks[philo->right_fork]);
+		excluded_printf(philo, SLEEP);
+		usleep(philo->data->time_to_sleep);
+	}
 	return (0);
+}
+
+bool	input_error(t_data *data)
+{
+	return (data->start_time < 0 || data->philosophers < 0
+		|| data->time_to_die < 0 || data->time_to_eat < 0
+		|| data->time_to_die < 0 || data->mutexes == NULL);
+}
+
+t_mutex	*init_mutexes(void)
+{
+	int		index;
+	t_mutex *mutexes;
+
+	index = 0;
+	mutexes = NULL;
+	mutexes = malloc(sizeof(t_mutex) * M_NUM);
+	if (mutexes == NULL)
+		return (NULL);
+	while (index < M_NUM)
+		pthread_mutex_init(&mutexes[index++], 0);
+	return (mutexes);
+}
+
+t_data	*input_scanner(int ac, char *av[])
+{
+	t_data	*data;
+
+	data = malloc(sizeof(t_data));
+	if (data == NULL)
+		return (NULL);
+	data->start_time = -1;
+	data->philosophers = -1;
+	data->time_to_die = -1;
+	data->time_to_eat = -1;
+	data->time_to_sleep = -1;
+	data->must_eat = -1;
+	data->mutexes = NULL;
+	data->start_time = get_time();
+	data->philosophers = ft_atoi(av[1]);
+	data->time_to_die = ft_atoi(av[2]) * 1000;
+	data->time_to_eat = ft_atoi(av[3]) * 1000;
+	data->time_to_sleep = ft_atoi(av[4]) * 1000;
+	if (ac == 6)
+		data->must_eat = ft_atoi(av[5]);
+	data->mutexes = init_mutexes();
+	printf("data initalized: %lu, %i, %i, %i, %i\n", data->start_time, data->philosophers, data->time_to_die, data->time_to_eat, data->time_to_sleep);
+	if (input_error(data))
+		return (NULL);
+	return (data);
+}
+
+bool	init_philos(t_philo *philos, t_data *data)
+{
+	int		i;
+	t_mutex	*fork;
+
+	i = 0;
+	fork = malloc(sizeof(t_mutex) * data->philosophers);
+	if (fork == NULL)
+		return (EXIT_FAILURE);
+	while (i < data->philosophers)
+		pthread_mutex_init(&fork[i++], 0);
+	i = 0;
+	while (i < data->philosophers)
+	{
+		philos[i].id = i;
+		philos[i].left_fork = i;
+		philos[i].right_fork = (i + 1);
+		philos[i].dead = false;
+		philos[i].forks = fork;
+		philos[i].data = data;
+		printf("philo number %i is ready to work\n", i);
+		i++;
+	}
+	return (EXIT_SUCCESS);
+}
+
+t_philo	*init_struct(int ac, char *av[])
+{
+	t_philo	*philos;
+	t_data	*data;
+
+	data = input_scanner(ac, av);
+	philos = malloc(sizeof(t_philo) * data->philosophers);
+	if (philos == NULL)
+		return (NULL);
+	philos->data = data;
+	if (philos->data == NULL)
+		return (NULL);
+	if (init_philos(philos, philos->data) == EXIT_FAILURE)
+		return (NULL);
+	return (philos);
+}
+
+// add error case
+void	init_pthreads(t_philo *philos)
+{
+	int			index;
+	pthread_t	*id;
+	pthread_t	keanu;
+
+	index = 0;
+	id = malloc(sizeof(pthread_t) * philos->data->philosophers);
+	if (id == NULL)
+		return ;
+	while (index < philos->data->philosophers)
+	{
+		pthread_create(&id[index], 0, ft_philo, (void *)&philos[index]);
+		index++;
+	}
+	pthread_create(&keanu, 0, killer, (void *)&philos[0]);
+	while (philos[0].dead != true)
+		continue ;
+	while (index < philos->data->philosophers)
+		pthread_join(id[index++], 0);
 }
 
 int	main(int ac, char *av[])
 {
-	(void)av;
-	(void)ac;
-	pthread_t	id1;
-	pthread_t	id2;
-	t_data		data;
-	t_mutex		v_levaya;
-	t_mutex		v_pravaya;
-	int			a;
-	int			b;
+	t_philo	*philos;
 
-	a = 1;
-	b = 2;
-	data.n1 = &a;
-	data.n2 = &b;
-	data.vilka_levaya = &v_levaya;
-	data.vilka_pravaya = &v_pravaya;
-	// if (ac == 5 || ac == 6)
-	// sozdaniye structury
-	// list double, review cat eater
-	// initialization time_to_ & transformation for usleep
-	pthread_mutex_init(&v_levaya, 0);
-	pthread_mutex_init(&v_pravaya, 0);
-	// dobavit otdelniy tred dlya checker'a kto sdoh
-	// s pomosh'u gettimeofday
-	pthread_create(&id1, 0, philo1, &data);
-	pthread_create(&id2, 0, philo2, &data);
-	pthread_join(id1, 0);
-	pthread_join(id2, 0);
-	pthread_mutex_destroy(data.vilka_levaya);
-	pthread_mutex_destroy(data.vilka_pravaya);
+	if (ac > 4 && ac < 7)
+	{
+		philos = init_struct(ac, av);
+		init_pthreads(philos);
+	}
 	return (0);
 }
-
-// void	philo_routine(int num)
-// {
-	
-// }
-
-// void	ft_philo(int num)
-// {
-// 	t_mutex		mutex;
-// 	pthread_t	id;
-
-// 	pthread_mutex_init(&mutex, 0);
-// 	pthread_create(&id, 0, philo_routine, &data);
-// 	pthread_join(&id, 0);
-// 	pthread_mutex_destroy(&mutex);
-// }
-
-// int	main(int ac, char *av[])
-// {
-// 	int		index;
-
-// 	index = 0;
-// 	if (ac > 4 && ac < 7)
-// 	{
-// 		printf("\033[0;32mOK\n\033[0m");
-// 		while (index < ft_atoi(av[1]))
-// 			ft_philo(index++);
-// 		return (0);
-// 	}
-// 	printf("\033[0;31mWrong number of arguments\n\033[0m");
-// 	return (0);
-// }
