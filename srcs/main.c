@@ -6,7 +6,7 @@
 /*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:46:31 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/14 20:11:52 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/16 14:41:28 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,11 @@ void	*killer(void *data)
 	philo = data;
 	while (1)
 	{
-		if ((get_time() - philo->data->start_time) > (unsigned long int)philo->data->time_to_die)
+		if ((get_time() - philo->data->start_time) >= (unsigned long int)philo->data->time_to_die)
+		{
+			printf("time==[%lu], to die==[%lu]\n", get_time() - philo->data->start_time, (unsigned long int)philo->data->time_to_die);
 			break;
+		}
 	}
 	philo->dead = true;
 	return (0);
@@ -44,9 +47,25 @@ void	*killer(void *data)
 
 void	excluded_printf(t_philo *philo, char *code)
 {
-	pthread_mutex_lock(&philo->data->mutexes[PRINT]);
-	printf("%lums %i %s\n", timestamp(philo->data), philo->id, code);
-	pthread_mutex_unlock(&philo->data->mutexes[PRINT]);
+	if (philo->dead == false)
+	{
+		pthread_mutex_lock(&philo->data->mutexes[PRINT]);
+		printf("%lums %i %s\n", timestamp(philo->data), philo->id, code);
+		pthread_mutex_unlock(&philo->data->mutexes[PRINT]);
+	}
+}
+
+bool	no_dead(t_philo *philos)
+{
+	int	i;
+
+	i = 0;
+	while (i < (philos->data->philosophers - 1))
+	{
+		if (philos[i++].dead == true)
+			return (false);
+	}
+	return (true);
 }
 
 void	*ft_philo(void *data)
@@ -55,9 +74,15 @@ void	*ft_philo(void *data)
 
 	philo = data;
 	if ((philo->id % 2) == 0)
-		usleep(1000);
-	while (1)
+		usleep(100);
+	while (philo->dead == false)
 	{
+		if ((get_time() - philo->data->start_time) >= (unsigned long int)philo->data->time_to_die)
+		{
+			excluded_printf(philo, DIED);
+			philo->dead = true;
+			break;
+		}
 		excluded_printf(philo, THINK);
 		pthread_mutex_lock(&philo->forks[philo->left_fork]);
 		excluded_printf(philo, FORK);
@@ -166,12 +191,25 @@ t_philo	*init_struct(int ac, char *av[])
 	return (philos);
 }
 
+void finish_simulation(t_philo *philos)
+{
+	int	i;
+
+	i = 0;
+	while (i < (philos[0].data->philosophers))
+	{
+		pthread_mutex_lock(&philos[i].data->mutexes[DEAD]);
+		philos[i].dead = true;
+		pthread_mutex_unlock(&philos[i++].data->mutexes[DEAD]);
+	}
+}
+
 // add error case
 void	init_pthreads(t_philo *philos)
 {
 	int			index;
 	pthread_t	*id;
-	pthread_t	keanu;
+	// pthread_t	keanu;
 
 	index = 0;
 	id = malloc(sizeof(pthread_t) * philos->data->philosophers);
@@ -182,11 +220,13 @@ void	init_pthreads(t_philo *philos)
 		pthread_create(&id[index], 0, ft_philo, (void *)&philos[index]);
 		index++;
 	}
-	pthread_create(&keanu, 0, killer, (void *)&philos[0]);
-	while (philos[0].dead != true)
+	while (no_dead(philos))
 		continue ;
+	finish_simulation(philos);
+	printf("kill everyone\n");
 	while (index < philos->data->philosophers)
 		pthread_join(id[index++], 0);
+	free(id);
 }
 
 int	main(int ac, char *av[])

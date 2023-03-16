@@ -6,7 +6,7 @@
 /*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:49:24 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/14 20:05:38 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/16 14:37:48 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ typedef enum e_mutexes
 	PRINT,
 	MEALS,
 	DONE,
-	DIED,
+	DEAD,
 	M_NUM
 }	t_mutexes;
 
@@ -33,6 +33,8 @@ typedef enum e_mutexes
 # define THINK "is thinking"
 # define EAT "is eating"
 # define SLEEP "is sleeping"
+# define DIED "died"
+# define MESSAGE "someone is really dead"
 
 typedef	pthread_mutex_t	t_mutex;
 
