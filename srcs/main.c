@@ -6,7 +6,7 @@
 /*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:46:31 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/18 20:14:07 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/18 20:47:46 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,9 @@ void	*ft_philo(void *data)
 		ft_usleep(philo->data->time_to_eat);
 		pthread_mutex_unlock(&philo->forks[philo->left_fork]);
 		pthread_mutex_unlock(&philo->forks[philo->right_fork]);
-		// pthread_mutex_lock(&philo->data->mutexes[TIME]);
+		pthread_mutex_lock(&philo->data->mutexes[TIME]);
 		philo->last_eat = get_time();
-		// pthread_mutex_unlock(&philo->data->mutexes[TIME]);
+		pthread_mutex_unlock(&philo->data->mutexes[TIME]);
 		excluded_printf(philo, SLEEP);
 		ft_usleep(philo->data->time_to_sleep);
 		excluded_printf(philo, THINK);
@@ -225,23 +225,22 @@ void	init_pthreads(t_philo *philos)
 	set_counters(philos, philos->data);
 	int stay = 1;
 	int	i = 0;
-	usleep(20000);
+	usleep(1000);
 	while (stay)
 	{
 		i = 0;
 		while (i < philos->data->philosophers)
 		{
-			// pthread_mutex_lock(&philos[i].data->mutexes[TIME]);
 			if ((get_time() - philos[i].last_eat) >= (unsigned long int)philos[i].data->time_to_die)
+			{
+				excluded_printf(&philos[i], DIED);
 				stay = 0;
-			// printf("%lu = %i ?\n", get_time() - philos[i].last_eat, philos[i].data->time_to_die);
-			// pthread_mutex_unlock(&philos[i].data->mutexes[TIME]);
+				break ;
+			}
 			i++;
 		}
 	}
-	excluded_printf(philos, MESSAGE1);
 	finish_simulation(philos);
-	printf("kill everyone\n");
 	while (index < philos->data->philosophers)
 		pthread_join(id[index++], 0);
 	free(id);
