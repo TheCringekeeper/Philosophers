@@ -6,7 +6,7 @@
 /*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:46:31 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/18 20:09:53 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/18 20:14:07 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	*ft_philo(void *data)
 	if ((philo->id % 2) == 0)
 	{
 		excluded_printf(philo, THINK);
-		usleep(100000);
+		usleep(1000);
 	}
 	while (1)
 	{
@@ -71,7 +71,7 @@ void	*ft_philo(void *data)
 		pthread_mutex_unlock(&philo->forks[philo->left_fork]);
 		pthread_mutex_unlock(&philo->forks[philo->right_fork]);
 		// pthread_mutex_lock(&philo->data->mutexes[TIME]);
-		// philo->last_eat = get_time();
+		philo->last_eat = get_time();
 		// pthread_mutex_unlock(&philo->data->mutexes[TIME]);
 		excluded_printf(philo, SLEEP);
 		ft_usleep(philo->data->time_to_sleep);
