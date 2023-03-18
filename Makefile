@@ -12,6 +12,8 @@ PATH_SRCS	+= srcs/
 #### SOURCES
 
 SRCS		+= main.c
+SRCS		+= init.c
+SRCS		+= time.c
 SRCS		+= ft_atoi.c
 
 vpath %.c $(PATH_SRCS)

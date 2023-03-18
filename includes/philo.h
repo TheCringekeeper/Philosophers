@@ -6,7 +6,7 @@
 /*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:49:24 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/18 16:15:31 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/18 21:07:14 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,10 @@ typedef enum e_mutexes
 # define MESSAGE1 "=======test 1111111========"
 # define MESSAGE2 "=======test 2222222========"
 
-typedef	pthread_mutex_t	t_mutex;
+typedef pthread_mutex_t	t_mutex;
 
 /* data that never changes */
-
-typedef	struct s_data {
+typedef struct s_data {
 	u_int64_t	sim_start;
 	int			philosophers;
 	int			time_to_die;
@@ -53,16 +52,26 @@ typedef	struct s_data {
 }				t_data;
 
 /* t_data is just to access data any time */
-
 typedef struct s_philo {
 	u_int64_t	last_eat;
 	int			id;
-	int			left_fork; //self id
-	int			right_fork; //next philo id
+	int			left_fork;
+	int			right_fork;
 	int			dead;
 	t_mutex		*forks;
 	t_data		*data;
 }				t_philo;
+
+///////////////////////init/////////////////////
+
+t_mutex		*init_mutexes(void);
+t_philo		*init_struct(int ac, char *av[]);
+
+///////////////////////time/////////////////////
+
+u_int64_t	get_time(void);
+void		excluded_printf(t_philo *philo, char *code);
+void		ft_usleep(int to_sleep);
 
 //////////////////////ft_atoi///////////////////
 
