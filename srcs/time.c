@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 21:00:41 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/19 14:58:10 by marvin           ###   ########.fr       */
+/*   Updated: 2023/03/19 22:24:00 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,23 @@ static u_int64_t	timestamp(t_philo *philo, u_int64_t sim_start)
 	return (test);
 }
 
+void	final_print(t_philo *philo)
+{
+	long unsigned int	stamp;
+
+	stamp = timestamp(philo, philo->data->sim_start);
+	pthread_mutex_lock(&philo->data->mutexes[PRINT]);
+	printf("%lu %i %s\n", stamp, philo->id, DIED);
+	pthread_mutex_unlock(&philo->data->mutexes[PRINT]);
+}
+
 void	excluded_printf(t_philo *philo, char *code)
 {
 	long unsigned int	stamp;
 
 	stamp = timestamp(philo, philo->data->sim_start);
 	pthread_mutex_lock(&philo->data->mutexes[DEAD]);
-	if (philo->dead == false)
+	if (philo->data->someone_dead ==false)
 	{
 		pthread_mutex_lock(&philo->data->mutexes[PRINT]);
 		printf("%lu %i %s\n", stamp, philo->id, code);
@@ -53,16 +63,23 @@ void	ft_usleep(int to_sleep)
 	usleep(to_sleep * 1000);
 }
 
-//to test
-void		smart_sleep(long long time, t_rules *rules)
+void	smart_sleep(int time, t_philo *philo)
 {
-	long long i;
+	u_int64_t start;
 
-	i = timestamp();
-	while (!(rules->dieded))
+	start = get_time();
+	while (philo->dead == false)
 	{
-		if (time_diff(i, timestamp()) >= time)
+		pthread_mutex_lock(&philo->data->mutexes[DEAD]);
+		if (philo->dead == true)
+		{
+			pthread_mutex_unlock(&philo->data->mutexes[DEAD]);
+			break ;
+		}
+		pthread_mutex_unlock(&philo->data->mutexes[DEAD]);
+		if ((get_time() - start) >= (u_int64_t)time)
 			break ;
 		usleep(50);
 	}
 }
+

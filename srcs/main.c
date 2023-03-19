@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:46:31 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/19 15:12:38 by marvin           ###   ########.fr       */
+/*   Updated: 2023/03/19 22:23:20 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,24 +19,26 @@ void	*ft_philo(void *data)
 	philo = (t_philo *)data;
 	if ((philo->id % 2) == 0)
 	{
-		// excluded_printf(philo, THINK);
+		excluded_printf(philo, THINK);
 		usleep(1000);
 	}
-	while (1)
+	while (philo->data->someone_dead == false)
 	{
 		pthread_mutex_lock(&philo->forks[philo->left_fork]);
 		excluded_printf(philo, FORK);
 		pthread_mutex_lock(&philo->forks[philo->right_fork]);
 		excluded_printf(philo, FORK);
 		excluded_printf(philo, EAT);
-		ft_usleep(philo->data->time_to_eat);
+		// ft_usleep(philo->data->time_to_eat);
+		smart_sleep(philo->data->time_to_eat, philo);
 		pthread_mutex_unlock(&philo->forks[philo->left_fork]);
 		pthread_mutex_unlock(&philo->forks[philo->right_fork]);
 		pthread_mutex_lock(&philo->data->mutexes[TIME]);
 		philo->last_eat = get_time();
 		pthread_mutex_unlock(&philo->data->mutexes[TIME]);
 		excluded_printf(philo, SLEEP);
-		ft_usleep(philo->data->time_to_sleep);
+		// ft_usleep(philo->data->time_to_sleep);
+		smart_sleep(philo->data->time_to_sleep, philo);
 		excluded_printf(philo, THINK);
 	}
 	return (0);
@@ -73,26 +75,13 @@ void	set_counters(t_philo *philos, t_data *data)
 	pthread_mutex_unlock(&data->mutexes[SYNK]);
 }
 
-// add error cases
-void	init_pthreads(t_philo *philos)
+void	killer(t_philo *philos)
 {
-	int			index;
-	pthread_t	*id;
-	int			stay;
-	int			i;
+	bool	stay;
+	int		i;
 
-	index = 0;
-	id = malloc(sizeof(pthread_t) * philos->data->philosophers);
-	if (id == NULL)
-		return ;
-	while (index < philos->data->philosophers)
-	{
-		pthread_create(&id[index], 0, ft_philo, (void *)&philos[index]);
-		index++;
-	}
-	stay = 1;
 	i = 0;
-	set_counters(philos, philos->data);
+	stay = true;
 	usleep(1000);
 	while (stay)
 	{
@@ -103,14 +92,36 @@ void	init_pthreads(t_philo *philos)
 			if ((get_time() - philos[i].last_eat) >= (unsigned long int)philos[i].data->time_to_die)
 			{
 				pthread_mutex_unlock(&philos[i].data->mutexes[TIME]);
-				excluded_printf(&philos[i], DIED);
-				stay = 0;
+				pthread_mutex_lock(&philos[i].data->mutexes[DEAD]);
+				philos->data->someone_dead = true;
+				pthread_mutex_unlock(&philos[i].data->mutexes[DEAD]);
+				stay = false;
+				final_print(&philos[i]);
 				break ;
 			}
 			pthread_mutex_unlock(&philos[i].data->mutexes[TIME]);
 			i++;
 		}
 	}
+}
+
+// add error cases
+void	init_pthreads(t_philo *philos)
+{
+	int			index;
+	pthread_t	*id;
+
+	index = 0;
+	id = malloc(sizeof(pthread_t) * philos->data->philosophers);
+	if (id == NULL)
+		return ;
+	while (index < philos->data->philosophers)
+	{
+		pthread_create(&id[index], 0, ft_philo, (void *)&philos[index]);
+		index++;
+	}
+	set_counters(philos, philos->data);
+	killer(philos);
 	finish_simulation(philos);
 	while (index < philos->data->philosophers)
 		pthread_join(id[index++], 0);

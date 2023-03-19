@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 20:55:05 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/19 15:12:29 by marvin           ###   ########.fr       */
+/*   Updated: 2023/03/19 22:21:11 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ static t_data	*input_scanner(int ac, char *av[])
 	data->time_to_sleep = -1;
 	data->must_eat = -1;
 	data->mutexes = NULL;
+	data->someone_dead = false;
 	data->sim_start = get_time();
 	data->philosophers = ft_atoi(av[1]);
 	data->time_to_die = ft_atoi(av[2]);
