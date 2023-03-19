@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 21:00:41 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/18 21:04:25 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/19 14:58:10 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,18 @@ void	excluded_printf(t_philo *philo, char *code)
 void	ft_usleep(int to_sleep)
 {
 	usleep(to_sleep * 1000);
+}
+
+//to test
+void		smart_sleep(long long time, t_rules *rules)
+{
+	long long i;
+
+	i = timestamp();
+	while (!(rules->dieded))
+	{
+		if (time_diff(i, timestamp()) >= time)
+			break ;
+		usleep(50);
+	}
 }

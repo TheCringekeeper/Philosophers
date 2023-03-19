@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 20:55:05 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/18 21:07:43 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/19 15:12:29 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static bool	input_error(t_data *data)
 {
-	return (data->sim_start < 0 || data->philosophers < 0
+	return (data->philosophers < 0
 		|| data->time_to_die < 0 || data->time_to_eat < 0
 		|| data->time_to_die < 0 || data->mutexes == NULL);
 }
@@ -41,7 +41,7 @@ static t_data	*input_scanner(int ac, char *av[])
 	if (ac == 6)
 		data->must_eat = ft_atoi(av[5]);
 	data->mutexes = init_mutexes();
-	printf("data initalized: %lu, %i, %i, %i, %i\n", data->sim_start, data->philosophers, data->time_to_die, data->time_to_eat, data->time_to_sleep);
+	// printf("data initalized: %lu, %i, %i, %i, %i\n", data->sim_start, data->philosophers, data->time_to_die, data->time_to_eat, data->time_to_sleep);
 	if (input_error(data))
 		return (NULL);
 	return (data);
@@ -80,12 +80,13 @@ static bool	init_philos(t_philo *philos, t_data *data)
 		philos[i].id = i;
 		philos[i].left_fork = i;
 		philos[i].right_fork = (i - 1);
+		// philos[i].right_fork_id = (i + 1) % nb_philo;
 		if (i == 0)
 			philos[i].right_fork = (data->philosophers);
 		philos[i].dead = false;
 		philos[i].forks = fork;
 		philos[i].data = data;
-		printf("philo %i ready to work\n", i);
+		// printf("philo %i ready to work\n", i);
 		i++;
 	}
 	return (EXIT_SUCCESS);
