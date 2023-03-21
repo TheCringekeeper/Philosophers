@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:46:31 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/21 23:13:04 by marvin           ###   ########.fr       */
+/*   Updated: 2023/03/21 23:27:13 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	*ft_philo(void *data)
 	if ((philo->id % 2) == 0)
 	{
 		excluded_printf(philo, THINK);
-		usleep(1000);
+		usleep(60000);
 	}
 	while (philo->data->someone_dead == false)
 	{
@@ -82,7 +82,7 @@ void	killer(t_philo *philos)
 
 	i = 0;
 	stay = true;
-	usleep(1000);
+	usleep(60000);
 	while (stay)
 	{
 		i = 0;
@@ -120,7 +120,7 @@ void	init_pthreads(t_philo *philos)
 		pthread_create(&id[index], 0, ft_philo, (void *)&philos[index]);
 		index++;
 	}
-	set_counters(philos, philos->data);
+	// set_counters(philos, philos->data);
 	killer(philos);
 	finish_simulation(philos);
 	while (index < philos->data->philosophers)
