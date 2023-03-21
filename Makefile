@@ -15,6 +15,7 @@ SRCS		+= main.c
 SRCS		+= init.c
 SRCS		+= time.c
 SRCS		+= ft_atoi.c
+SRCS		+= free.c
 
 vpath %.c $(PATH_SRCS)
 
@@ -46,6 +47,7 @@ CFLAGS			+= -Wall
 CFLAGS			+= -Wextra
 CFLAGS			+= -Werror
 CFLAGS			+= -fsanitize=address
+# CFLAGS			+= -fsanitize=thread
 
 SMAKE		= make --no-print-directory
 

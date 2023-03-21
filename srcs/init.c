@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 20:55:05 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/19 22:21:11 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/21 22:59:23 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,14 +80,12 @@ static bool	init_philos(t_philo *philos, t_data *data)
 		philos[i].last_eat = get_time();
 		philos[i].id = i;
 		philos[i].left_fork = i;
-		philos[i].right_fork = (i - 1);
-		// philos[i].right_fork_id = (i + 1) % nb_philo;
-		if (i == 0)
-			philos[i].right_fork = (data->philosophers);
+		philos[i].right_fork = (i + 1);
+		if (i == (data->philosophers) - 1)
+			philos[i].right_fork = 0;
 		philos[i].dead = false;
 		philos[i].forks = fork;
 		philos[i].data = data;
-		// printf("philo %i ready to work\n", i);
 		i++;
 	}
 	return (EXIT_SUCCESS);

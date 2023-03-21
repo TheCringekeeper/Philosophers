@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:49:24 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/19 22:23:34 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/21 23:12:26 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,5 +79,6 @@ void		smart_sleep(int time, t_philo *philo);
 //////////////////////ft_atoi///////////////////
 
 long long	ft_atoi(const char *nptr);
+void		free_everything(t_philo *philos);
 
 #endif
