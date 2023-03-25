@@ -14,7 +14,6 @@
 
 void	free_everything(t_philo *philos)
 {
-	usleep(1000);
 	free(philos->data->mutexes);
 	free(philos->data);
 	free(philos->forks);

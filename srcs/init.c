@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 20:55:05 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/21 22:59:23 by marvin           ###   ########.fr       */
+/*   Updated: 2023/03/25 01:42:53 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ static t_data	*input_scanner(int ac, char *av[])
 	if (ac == 6)
 		data->must_eat = ft_atoi(av[5]);
 	data->mutexes = init_mutexes();
-	// printf("data initalized: %lu, %i, %i, %i, %i\n", data->sim_start, data->philosophers, data->time_to_die, data->time_to_eat, data->time_to_sleep);
 	if (input_error(data))
 		return (NULL);
 	return (data);

@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:46:31 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/21 23:27:13 by marvin           ###   ########.fr       */
+/*   Updated: 2023/03/25 12:07:53 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ void	*ft_philo(void *data)
 		excluded_printf(philo, THINK);
 		usleep(60000);
 	}
-	while (philo->data->someone_dead == false)
+	while (1)
+	// while (philo->data->someone_dead == false)
 	{
 		pthread_mutex_lock(&philo->forks[philo->left_fork]);
 		excluded_printf(philo, FORK);
@@ -44,7 +45,6 @@ void	*ft_philo(void *data)
 	return (0);
 }
 
-// tut mutex nuzhen, eto tipa killer tred
 void	finish_simulation(t_philo *philos)
 {
 	int	i;
