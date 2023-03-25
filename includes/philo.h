@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:49:24 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/21 23:12:26 by marvin           ###   ########.fr       */
+/*   Updated: 2023/03/25 14:18:40 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ typedef pthread_mutex_t	t_mutex;
 typedef struct s_data {
 	u_int64_t	sim_start;
 	int			philosophers;
-	int			time_to_die;
-	int			time_to_eat;
-	int			time_to_sleep;
+	u_int64_t	time_to_die;
+	u_int64_t	time_to_eat;
+	u_int64_t	time_to_sleep;
 	bool		someone_dead;
 	int			must_eat;
 	t_mutex		*mutexes;
@@ -58,7 +58,6 @@ typedef struct s_philo {
 	int			id;
 	int			left_fork;
 	int			right_fork;
-	int			dead;
 	t_mutex		*forks;
 	t_data		*data;
 }				t_philo;
@@ -74,7 +73,8 @@ u_int64_t	get_time(void);
 void		excluded_printf(t_philo *philo, char *code);
 void		ft_usleep(int to_sleep);
 void		final_print(t_philo *philo);
-void		smart_sleep(int time, t_philo *philo);
+void		smart_sleep(u_int64_t time, t_philo *philo);
+bool		someone_died(t_philo *philo);
 
 //////////////////////ft_atoi///////////////////
 

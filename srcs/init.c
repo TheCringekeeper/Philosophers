@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 20:55:05 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/25 01:42:53 by marvin           ###   ########.fr       */
+/*   Updated: 2023/03/25 13:37:28 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 static bool	input_error(t_data *data)
 {
 	return (data->philosophers < 0
-		|| data->time_to_die < 0 || data->time_to_eat < 0
-		|| data->time_to_die < 0 || data->mutexes == NULL);
+		|| data->time_to_die == 0 || data->time_to_eat == 0
+		|| data->time_to_die == 0 || data->mutexes == NULL);
 }
 
 static t_data	*input_scanner(int ac, char *av[])
@@ -28,9 +28,9 @@ static t_data	*input_scanner(int ac, char *av[])
 		return (NULL);
 	data->sim_start = -1;
 	data->philosophers = -1;
-	data->time_to_die = -1;
-	data->time_to_eat = -1;
-	data->time_to_sleep = -1;
+	data->time_to_die = 0;
+	data->time_to_eat = 0;
+	data->time_to_sleep = 0;
 	data->must_eat = -1;
 	data->mutexes = NULL;
 	data->someone_dead = false;
@@ -82,7 +82,6 @@ static bool	init_philos(t_philo *philos, t_data *data)
 		philos[i].right_fork = (i + 1);
 		if (i == (data->philosophers) - 1)
 			philos[i].right_fork = 0;
-		philos[i].dead = false;
 		philos[i].forks = fork;
 		philos[i].data = data;
 		i++;

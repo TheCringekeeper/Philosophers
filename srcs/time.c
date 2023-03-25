@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 21:00:41 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/25 12:10:33 by marvin           ###   ########.fr       */
+/*   Updated: 2023/03/25 16:22:07 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ void	final_print(t_philo *philo)
 	long unsigned int	stamp;
 
 	stamp = timestamp(philo->data->sim_start);
-	pthread_mutex_lock(&philo->data->mutexes[PRINT]);
+	// pthread_mutex_lock(&philo->data->mutexes[PRINT]);
 	printf("%lu %i %s\n", stamp, philo->id, DIED);
-	pthread_mutex_unlock(&philo->data->mutexes[PRINT]);
+	// pthread_mutex_unlock(&philo->data->mutexes[PRINT]);
 }
 
 void	excluded_printf(t_philo *philo, char *code)
@@ -55,36 +55,29 @@ void	ft_usleep(int to_sleep)
 	usleep(to_sleep * 1000);
 }
 
-int	death_check(t_philo *philo)
+bool	someone_died(t_philo *philo)
 {
-	int	ret;
-
 	pthread_mutex_lock(&philo->data->mutexes[DEAD]);
-	if (philo->dead == true)
-		ret = 1;
-	else
-		ret = 0;
-	pthread_mutex_unlock(&philo->data->mutexes[DEAD]);
-	return (ret);
+	if (philo->data->someone_dead == true)
+		return (pthread_mutex_unlock(&philo->data->mutexes[DEAD]), true);
+	return (pthread_mutex_unlock(&philo->data->mutexes[DEAD]), false);
 }
 
-void	smart_sleep(int time, t_philo *philo)
+void	smart_sleep(u_int64_t microseconds, t_philo *philo)
 {
-	u_int64_t start;
+	u_int64_t	start;
+	u_int64_t	cur;
+	u_int64_t	elapsed;
 
 	start = get_time();
 	while (1)
 	{
-		pthread_mutex_lock(&philo->data->mutexes[DEAD]);
-		if (philo->dead == true)
-		{
-			pthread_mutex_unlock(&philo->data->mutexes[DEAD]);
+		cur = get_time();
+		elapsed = cur - start;
+		if (elapsed >= microseconds)
 			break ;
-		}
-		pthread_mutex_unlock(&philo->data->mutexes[DEAD]);
-		if ((get_time() - start) >= (u_int64_t)time)
-			break ;
-		usleep(1);
+		if (someone_died(philo) == true)
+			return ;
+		usleep(10);
 	}
 }
-
