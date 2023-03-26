@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 21:00:41 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/25 16:22:07 by marvin           ###   ########.fr       */
+/*   Updated: 2023/03/26 21:10:33 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,7 @@ void	final_print(t_philo *philo)
 	long unsigned int	stamp;
 
 	stamp = timestamp(philo->data->sim_start);
-	// pthread_mutex_lock(&philo->data->mutexes[PRINT]);
 	printf("%lu %i %s\n", stamp, philo->id, DIED);
-	// pthread_mutex_unlock(&philo->data->mutexes[PRINT]);
 }
 
 void	excluded_printf(t_philo *philo, char *code)
@@ -42,11 +40,7 @@ void	excluded_printf(t_philo *philo, char *code)
 	stamp = timestamp(philo->data->sim_start);
 	pthread_mutex_lock(&philo->data->mutexes[DEAD]);
 	if (philo->data->someone_dead == false)
-	{
-		// pthread_mutex_lock(&philo->data->mutexes[PRINT]);
 		printf("%lu %i %s\n", stamp, philo->id, code);
-		// pthread_mutex_unlock(&philo->data->mutexes[PRINT]);
-	}
 	pthread_mutex_unlock(&philo->data->mutexes[DEAD]);
 }
 

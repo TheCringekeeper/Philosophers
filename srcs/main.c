@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:46:31 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/25 16:42:58 by marvin           ###   ########.fr       */
+/*   Updated: 2023/03/26 21:15:56 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,16 @@ bool	fork_release(struct s_philo *philo, int forks)
 		return (true);
 	}
 	return (false);
+}
+
+bool	ft_eating(t_philo *philo)
+{
+	excluded_printf(philo, FORK);
+	excluded_printf(philo, EAT);
+	// if (philo->data->must_eat != -1)
+	// 	philo->data->must_eat--;
+	smart_sleep(philo->data->time_to_eat, philo);
+	return (true);
 }
 
 void	*ft_philo(void *data)
@@ -47,9 +57,7 @@ void	*ft_philo(void *data)
 		pthread_mutex_lock(&philo->forks[philo->right_fork]);
 		if (fork_release(philo, 2) == true)
 			return (0);
-		excluded_printf(philo, FORK);
-		excluded_printf(philo, EAT);
-		smart_sleep(philo->data->time_to_eat, philo);
+		ft_eating(philo);
 		pthread_mutex_unlock(&philo->forks[philo->left_fork]);
 		pthread_mutex_unlock(&philo->forks[philo->right_fork]);
 		pthread_mutex_lock(&philo->data->mutexes[TIME]);

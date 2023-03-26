@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:49:24 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/25 14:18:40 by marvin           ###   ########.fr       */
+/*   Updated: 2023/03/26 21:16:27 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ typedef enum e_mutexes
 # define EAT "is eating"
 # define SLEEP "is sleeping"
 # define DIED "died"
-# define MESSAGE1 "=======test 1111111========"
-# define MESSAGE2 "=======test 2222222========"
 
 typedef pthread_mutex_t	t_mutex;
 
