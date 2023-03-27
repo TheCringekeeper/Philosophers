@@ -57,31 +57,33 @@ SMAKE		= make --no-print-directory
 all : $(NAME)
 
 $(NAME): $(OBJS)
+	@clear
 	@$(CC) $(CFLAGS) $(OBJS) -o $@ -L $(INCLUDES) -pthread
-	@echo "\033[1;35m======= philo has been created =======\033[0m"
+	@echo "\033[1;35m           __    _ __                       __                  "
+	@echo "    ____  / /_  (_) /___  _________  ____  / /_  ___  __________"
+	@echo "   / __ \/ __ \/ / / __ \/ ___/ __ \/ __ \/ __ \/ _ \/ ___/ ___/"
+	@echo "  / /_/ / / / / / / /_/ (__  ) /_/ / /_/ / / / /  __/ /  (__  ) "
+	@echo " / .___/_/ /_/_/_/\____/____/\____/ .___/_/ /_/\___/_/  /____/  "
+	@echo "/_/                              /_/                            \n\033[0m"
 
 $(OBJS): $(PATH_OBJS)/%.o: %.c $(HEADER)
 	@mkdir -p $(PATH_OBJS)
 	@$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDES)
 
 clean:
+	@clear
 	@$(RM) -R $(PATH_OBJS)
-	@echo "\033[1;36m======= philo object files have been removed =======\033[0m"
+	@echo "\033[1;36m======== philo object files removed ========\033[0m"
 
 fclean: clean
+	@clear
 	@$(RM) $(NAME)
-	@echo "\033[1;36m======= philo has been removed =======\033[0m"
+	@echo "\033[1;36m======= philo executable removed =======\033[0m"
 
 re: fclean
 	@$(SMAKE)
 
-norm:
-	@norminette $(PATH_SRCS) $(INCLUDES)
-
-valgrind:
-	@$(VALGRIND) ./$(NAME)
-
-.PHONY: all clean fclean re norm valgrind
+.PHONY: all clean fclean re
 
 # variables spéciales
 # $@ fait référence au nom de la cible
