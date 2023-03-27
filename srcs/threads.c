@@ -6,7 +6,7 @@
 /*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 09:26:22 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/27 09:52:00 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/27 10:00:55 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,20 @@ bool	fork_release(struct s_philo *philo, int forks)
 {
 	if (death_check(philo) == true)
 	{
-		pthread_mutex_unlock(&philo->forks[philo->left_fork]);
-		if (forks == 2)
+		if (philo->left_fork < philo->right_fork)
+		{
+			pthread_mutex_unlock(&philo->forks[philo->left_fork]);
+			if (forks == 2)
+				pthread_mutex_unlock(&philo->forks[philo->right_fork]);
+			return (true);
+		}
+		else
+		{
 			pthread_mutex_unlock(&philo->forks[philo->right_fork]);
-		return (true);
+			if (forks == 2)
+				pthread_mutex_unlock(&philo->forks[philo->left_fork]);
+			return (true);
+		}
 	}
 	return (false);
 }
