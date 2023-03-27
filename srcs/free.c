@@ -14,8 +14,12 @@
 
 void	free_everything(t_philo *philos)
 {
-	free(philos->data->mutexes);
-	free(philos->data);
-	free(philos->forks);
-	free(philos);
+	if (philos->data->mutexes != NULL)
+		free(philos->data->mutexes);
+	if (philos->data != NULL)
+		free(philos->data);
+	if (philos->forks != NULL)
+		free(philos->forks);
+	if (philos != NULL)
+		free(philos);
 }

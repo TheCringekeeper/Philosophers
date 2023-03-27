@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 20:55:05 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/25 13:37:28 by marvin           ###   ########.fr       */
+/*   Updated: 2023/03/27 08:06:11 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static bool	input_error(t_data *data)
 {
-	return (data->philosophers < 0
+	return (data->philosophers <= 0
 		|| data->time_to_die == 0 || data->time_to_eat == 0
 		|| data->time_to_die == 0 || data->mutexes == NULL);
 }
@@ -27,11 +27,12 @@ static t_data	*input_scanner(int ac, char *av[])
 	if (data == NULL)
 		return (NULL);
 	data->sim_start = -1;
-	data->philosophers = -1;
+	data->philosophers = 0;
 	data->time_to_die = 0;
 	data->time_to_eat = 0;
 	data->time_to_sleep = 0;
 	data->must_eat = -1;
+	data->exit = 0;
 	data->mutexes = NULL;
 	data->someone_dead = false;
 	data->sim_start = get_time();
@@ -77,7 +78,8 @@ static bool	init_philos(t_philo *philos, t_data *data)
 	while (i < data->philosophers)
 	{
 		philos[i].last_eat = get_time();
-		philos[i].id = i;
+		philos[i].id = i + 1;
+		philos[i].eat_times = data->must_eat;
 		philos[i].left_fork = i;
 		philos[i].right_fork = (i + 1);
 		if (i == (data->philosophers) - 1)

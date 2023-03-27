@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 21:00:41 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/26 21:10:33 by marvin           ###   ########.fr       */
+/*   Updated: 2023/03/27 04:32:22 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,19 +57,16 @@ bool	someone_died(t_philo *philo)
 	return (pthread_mutex_unlock(&philo->data->mutexes[DEAD]), false);
 }
 
-void	smart_sleep(u_int64_t microseconds, t_philo *philo)
+void	smart_sleep(u_int64_t sleep_time, t_philo *philo)
 {
 	u_int64_t	start;
-	u_int64_t	cur;
-	u_int64_t	elapsed;
 
 	start = get_time();
 	while (1)
 	{
-		cur = get_time();
-		elapsed = cur - start;
-		if (elapsed >= microseconds)
-			break ;
+		// printf("sleep time == [%lu], cur_time - start time == [%lu]\n", sleep_time, (get_time() - start));
+		if (get_time() - start >= sleep_time)
+			return ;
 		if (someone_died(philo) == true)
 			return ;
 		usleep(10);

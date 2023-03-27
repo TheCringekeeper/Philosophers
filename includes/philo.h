@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:49:24 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/26 21:16:27 by marvin           ###   ########.fr       */
+/*   Updated: 2023/03/27 05:11:09 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ typedef enum e_mutexes
 	M_NUM
 }	t_mutexes;
 
+# define FIRST 1
+# define SECOND 2
 # define FORK "has taken a fork"
 # define THINK "is thinking"
 # define EAT "is eating"
@@ -47,6 +49,7 @@ typedef struct s_data {
 	u_int64_t	time_to_sleep;
 	bool		someone_dead;
 	int			must_eat;
+	int			exit;
 	t_mutex		*mutexes;
 }				t_data;
 
@@ -54,6 +57,7 @@ typedef struct s_data {
 typedef struct s_philo {
 	u_int64_t	last_eat;
 	int			id;
+	int			eat_times;
 	int			left_fork;
 	int			right_fork;
 	t_mutex		*forks;
