@@ -6,7 +6,7 @@
 /*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 09:26:22 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/27 11:02:54 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/28 01:08:38 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,18 @@ bool	fork_release(struct s_philo *philo, int forks)
 
 bool	ft_eating(t_philo *philo)
 {
-	excluded_printf(philo, FORK);
-	excluded_printf(philo, EAT);
-	pthread_mutex_lock(&philo->data->mutexes[EATS]);
-	if (philo->eat_times != -1)
-		philo->eat_times--;
-	pthread_mutex_unlock(&philo->data->mutexes[EATS]);
-	smart_sleep(philo->data->time_to_eat, philo);
-	pthread_mutex_unlock(&philo->forks[philo->left_fork]);
-	pthread_mutex_unlock(&philo->forks[philo->right_fork]);
+	// excluded_printf(philo, FORK);
+	// excluded_printf(philo, EAT);
+	// pthread_mutex_lock(&philo->data->mutexes[EATS]);
+	// if (philo->eat_times != -1)
+	// 	philo->eat_times--;
+	// pthread_mutex_unlock(&philo->data->mutexes[EATS]);
 	pthread_mutex_lock(&philo->data->mutexes[TIME]);
 	philo->last_eat = get_time();
 	pthread_mutex_unlock(&philo->data->mutexes[TIME]);
+	smart_sleep(philo->data->time_to_eat, philo);
+	pthread_mutex_unlock(&philo->forks[philo->left_fork]);
+	pthread_mutex_unlock(&philo->forks[philo->right_fork]);
 	return (true);
 }
 
@@ -69,42 +69,16 @@ void	choosing_fork(t_philo *philo, int order)
 	}
 }
 
-void	smart_delay(t_philo *philo)
-{
-	if ((philo->id % 2) == 0)
-	{
-		excluded_printf(philo, THINK);
-		usleep(30000);
-		return ;
-	}
-	else if ((philo->id % 2) == 1)
-	{
-		// if ((philo->id % 3) == 2)
-		// {
-		// 	excluded_printf(philo, THINK);
-		// 	usleep(60000);
-		// 	return ;
-		// }
-		if ((philo->id % 3) == 0)
-		{
-			excluded_printf(philo, THINK);
-			usleep(30000);
-			return ;
-		}
-	}
-}
-
 void	*ft_philo(void *data)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
-	smart_delay(philo);
-	// if ((philo->id % 2) == 0)
-	// {
-	// 	excluded_printf(philo, THINK);
-	// 	usleep(60000);
-	// }
+	if ((philo->id % 2) == 0)
+	{
+		excluded_printf(philo, THINK);
+		usleep(60000);
+	}
 	while (death_check(philo) == false)
 	{
 		choosing_fork(philo, FIRST);
@@ -114,9 +88,21 @@ void	*ft_philo(void *data)
 		choosing_fork(philo, SECOND);
 		if (fork_release(philo, 2) == true)
 			return (0);
+		excluded_printf(philo, FORK);
+		excluded_printf(philo, EAT);
+		pthread_mutex_lock(&philo->data->mutexes[EATS]);
+		if (philo->eat_times != -1)
+		{
+			pthread_mutex_unlock(&philo->data->mutexes[EATS]);
+			pthread_mutex_lock(&philo->data->mutexes[EATS]);
+			philo->eat_times--;
+		}
+		pthread_mutex_unlock(&philo->data->mutexes[EATS]);
 		ft_eating(philo);
 		excluded_printf(philo, SLEEP);
 		smart_sleep(philo->data->time_to_sleep, philo);
+		if (philo->data->philosophers % 2 == 1)
+			usleep(1000);
 		excluded_printf(philo, THINK);
 	}
 	return (0);
@@ -140,6 +126,7 @@ void	*eater(void *data)
 				philos[i].data->exit++;
 			pthread_mutex_unlock(&philos[i++].data->mutexes[EATS]);
 		}
+		usleep(100);
 		if (philos->data->exit == philos->data->philosophers)
 		{
 			pthread_mutex_lock(&philos->data->mutexes[DEAD]);
@@ -160,7 +147,7 @@ void	*killer(void *data)
 
 	philos = (t_philo *)data;
 	i = 0;
-	usleep(60000);
+	usleep(600000);
 	while (1)
 	{
 		i = 0;
@@ -182,5 +169,6 @@ void	*killer(void *data)
 			}
 			pthread_mutex_unlock(&philos[i++].data->mutexes[TIME]);
 		}
+		usleep(100);
 	}
 }
