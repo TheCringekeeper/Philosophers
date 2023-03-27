@@ -11,11 +11,13 @@ PATH_SRCS	+= srcs/
 ###########################################################
 #### SOURCES
 
-SRCS		+= main.c
-SRCS		+= init.c
-SRCS		+= time.c
-SRCS		+= ft_atoi.c
 SRCS		+= free.c
+SRCS		+= ft_atoi.c
+SRCS		+= main.c
+SRCS		+= threads.c
+SRCS		+= time.c
+SRCS		+= init.c
+SRCS		+= utils.c
 
 vpath %.c $(PATH_SRCS)
 

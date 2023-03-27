@@ -6,7 +6,7 @@
 /*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:49:24 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/27 05:11:09 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/27 09:28:50 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,18 +69,28 @@ typedef struct s_philo {
 t_mutex		*init_mutexes(void);
 t_philo		*init_struct(int ac, char *av[]);
 
+//////////////////////threads///////////////////
+
+void		*ft_philo(void *data);
+void		*eater(void *data);
+void		*killer(void *data);
+
 ///////////////////////time/////////////////////
 
 u_int64_t	get_time(void);
-void		excluded_printf(t_philo *philo, char *code);
-void		ft_usleep(int to_sleep);
-void		final_print(t_philo *philo);
+u_int64_t	timestamp(u_int64_t sim_start);
 void		smart_sleep(u_int64_t time, t_philo *philo);
-bool		someone_died(t_philo *philo);
 
 //////////////////////ft_atoi///////////////////
 
 long long	ft_atoi(const char *nptr);
 void		free_everything(t_philo *philos);
+
+///////////////////////utils////////////////////
+
+void		excluded_printf(t_philo *philo, char *code);
+void		final_print(t_philo *philo);
+bool		death_check(t_philo *philo);
+bool		someone_starved(t_philo philo, u_int64_t time_to_die);
 
 #endif
