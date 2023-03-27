@@ -6,7 +6,7 @@
 /*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 09:26:22 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/27 10:00:55 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/27 11:02:54 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,16 +69,42 @@ void	choosing_fork(t_philo *philo, int order)
 	}
 }
 
+void	smart_delay(t_philo *philo)
+{
+	if ((philo->id % 2) == 0)
+	{
+		excluded_printf(philo, THINK);
+		usleep(30000);
+		return ;
+	}
+	else if ((philo->id % 2) == 1)
+	{
+		// if ((philo->id % 3) == 2)
+		// {
+		// 	excluded_printf(philo, THINK);
+		// 	usleep(60000);
+		// 	return ;
+		// }
+		if ((philo->id % 3) == 0)
+		{
+			excluded_printf(philo, THINK);
+			usleep(30000);
+			return ;
+		}
+	}
+}
+
 void	*ft_philo(void *data)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
-	if ((philo->id % 2) == 0)
-	{
-		excluded_printf(philo, THINK);
-		usleep(60000);
-	}
+	smart_delay(philo);
+	// if ((philo->id % 2) == 0)
+	// {
+	// 	excluded_printf(philo, THINK);
+	// 	usleep(60000);
+	// }
 	while (death_check(philo) == false)
 	{
 		choosing_fork(philo, FIRST);

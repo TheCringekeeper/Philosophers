@@ -6,7 +6,7 @@
 /*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:46:31 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/27 09:51:18 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/27 10:12:08 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	init_pthreads(t_philo *philos)
 	pthread_create(&kill, 0, killer, (void *)&philos[0]);
 	if (philos->data->must_eat != -1)
 		pthread_create(&eat, 0, eater, (void *)&philos[0]);
-	// usleep(1000);
+	usleep(1000);
 	if (philos->data->must_eat != -1)
 		pthread_join(eat, 0);
 	pthread_join(kill, 0);
