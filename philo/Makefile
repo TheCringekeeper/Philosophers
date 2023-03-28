@@ -13,10 +13,11 @@ PATH_SRCS	+= srcs/
 
 SRCS		+= free.c
 SRCS		+= ft_atoi.c
-SRCS		+= main.c
-SRCS		+= threads.c
-SRCS		+= time.c
+SRCS		+= ft_philo.c
 SRCS		+= init.c
+SRCS		+= main.c
+SRCS		+= monitoring.c
+SRCS		+= time.c
 SRCS		+= utils.c
 
 vpath %.c $(PATH_SRCS)
