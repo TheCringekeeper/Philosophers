@@ -6,7 +6,7 @@
 /*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 21:00:41 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/27 09:50:46 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/28 07:17:18 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	smart_sleep(u_int64_t sleep_time, t_philo *philo)
 	start = get_time();
 	while (1)
 	{
-		// printf("cur_time - start time == [%lu]\n", (get_time() - start));
 		if (get_time() - start >= sleep_time)
 			return ;
 		if (death_check(philo) == true)

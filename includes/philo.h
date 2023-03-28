@@ -6,7 +6,7 @@
 /*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:49:24 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/27 09:28:50 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/28 08:38:08 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,8 @@
 
 typedef enum e_mutexes
 {
-	PRINT,
-	EATS,
-	TIME,
+	READ,
 	DEAD,
-	SYNK,
 	M_NUM
 }	t_mutexes;
 
@@ -47,9 +44,8 @@ typedef struct s_data {
 	u_int64_t	time_to_die;
 	u_int64_t	time_to_eat;
 	u_int64_t	time_to_sleep;
-	bool		someone_dead;
+	bool		should_exit;
 	int			must_eat;
-	int			exit;
 	t_mutex		*mutexes;
 }				t_data;
 

@@ -6,7 +6,7 @@
 /*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:46:31 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/28 00:58:35 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/28 08:29:07 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,20 +39,22 @@ void	init_pthreads(t_philo *philos)
 	index = -1;
 	while (++index < philos->data->philosophers)
 		pthread_create(&id[index], 0, ft_philo, (void *)&philos[index]);
-	pthread_create(&kill, 0, killer, (void *)&philos[0]);
+	pthread_create(&kill, 0, killer, (void *)philos);
 	if (philos->data->must_eat != -1)
-		pthread_create(&eat, 0, eater, (void *)&philos[0]);
+		pthread_create(&eat, 0, eater, (void *)philos);
 	usleep(1000);
 	index = -1;
 	while (++index < philos->data->philosophers)
 		pthread_join(id[index], 0);
+	pthread_join(kill, 0);
 	if (philos->data->must_eat != -1)
 		pthread_join(eat, 0);
-	pthread_join(kill, 0);
 	// ft_mutex_destroy(philos);
 	free(id);
 }
 
+// to add: must_eat == 0 case
+// remove -g from makefile
 int	main(int ac, char *av[])
 {
 	t_philo	*philos;
