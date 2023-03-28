@@ -6,7 +6,7 @@
 /*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 10:49:38 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/28 12:04:12 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/28 12:41:37 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,11 @@ void	choosing_fork(t_philo *philo, int order)
 	}
 }
 
-/* The ft_eating() function is called by each philosopher to perform their
-** eating action. It locks one fork, waits for the other fork to be available,
-** and then prints a message that they have picked up both forks and they are
-** eating. After that, it updates the eat times of the philosopher and unlocks the forks.*/
+/* The ft_eating() function is called by each philosopher to perform
+** their eating action. It locks one fork, waits for the other fork
+** to be available, and then prints a message that they have picked
+** up both forks and they are eating. After that, it updates the eat
+** times of the philosopher and unlocks the forks.*/
 bool	ft_eating(t_philo *philo)
 {
 	choosing_fork(philo, FIRST);

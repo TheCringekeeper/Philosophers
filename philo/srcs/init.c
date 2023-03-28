@@ -6,7 +6,7 @@
 /*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 20:55:05 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/28 11:42:36 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/28 12:40:43 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 static bool	input_error(t_data *data, int ac)
 {
 	return (data->philosophers <= 0 || (ac == 6 && data->must_eat < 0)
-		|| data->time_to_die <= 0 || data->time_to_eat <= 0 
+		|| data->time_to_die <= 0 || data->time_to_eat <= 0
 		|| data->sim_start == 0 || data->time_to_sleep <= 0
 		|| data->mutexes == NULL);
 }
