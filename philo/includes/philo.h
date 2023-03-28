@@ -6,7 +6,7 @@
 /*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:49:24 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/28 08:38:08 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/28 09:56:00 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ typedef pthread_mutex_t	t_mutex;
 typedef struct s_data {
 	u_int64_t	sim_start;
 	int			philosophers;
-	u_int64_t	time_to_die;
-	u_int64_t	time_to_eat;
-	u_int64_t	time_to_sleep;
+	long long	time_to_die;
+	long long	time_to_eat;
+	long long	time_to_sleep;
 	bool		should_exit;
 	int			must_eat;
 	t_mutex		*mutexes;

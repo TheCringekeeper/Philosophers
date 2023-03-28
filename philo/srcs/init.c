@@ -6,17 +6,18 @@
 /*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 20:55:05 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/28 07:18:08 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/28 09:30:15 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static bool	input_error(t_data *data)
+static bool	input_error(t_data *data, int ac)
 {
-	return (data->philosophers <= 0
-		|| data->time_to_die == 0 || data->time_to_eat == 0
-		|| data->time_to_die == 0 || data->mutexes == NULL);
+	return (data->philosophers <= 0 || (ac == 6 && data->must_eat < 0)
+		|| data->time_to_die <= 0 || data->time_to_eat <= 0
+		|| data->sim_start == 0
+		|| data->time_to_sleep <= 0 || data->mutexes == NULL);
 }
 
 static t_data	*input_scanner(int ac, char *av[])
@@ -26,11 +27,6 @@ static t_data	*input_scanner(int ac, char *av[])
 	data = malloc(sizeof(t_data));
 	if (data == NULL)
 		return (NULL);
-	data->sim_start = -1;
-	data->philosophers = 0;
-	data->time_to_die = 0;
-	data->time_to_eat = 0;
-	data->time_to_sleep = 0;
 	data->must_eat = -1;
 	data->mutexes = NULL;
 	data->should_exit = false;
@@ -42,8 +38,8 @@ static t_data	*input_scanner(int ac, char *av[])
 	if (ac == 6)
 		data->must_eat = ft_atoi(av[5]);
 	data->mutexes = init_mutexes();
-	if (input_error(data))
-		return (NULL);
+	if (input_error(data, ac))
+		return (free(data->mutexes), free(data), NULL);
 	return (data);
 }
 
@@ -102,6 +98,8 @@ t_philo	*init_struct(int ac, char *av[])
 	t_data	*data;
 
 	data = input_scanner(ac, av);
+	if (data == NULL)
+		return (NULL);
 	philos = malloc(sizeof(t_philo) * data->philosophers);
 	if (philos == NULL)
 		return (NULL);

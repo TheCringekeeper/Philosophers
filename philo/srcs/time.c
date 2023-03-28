@@ -6,7 +6,7 @@
 /*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 21:00:41 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/28 07:17:18 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/28 09:23:54 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ u_int64_t	get_time(void)
 {
 	struct timeval	tv;
 
-	gettimeofday(&tv, NULL);
+	if (gettimeofday(&tv, NULL) == -1)
+		return (0);
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 

@@ -14,7 +14,7 @@
 
 void	free_everything(t_philo *philos)
 {
-	if (philos->data->mutexes != NULL)
+	if (philos != NULL && philos->data != NULL && philos->data->mutexes != NULL)
 		free(philos->data->mutexes);
 	if (philos->data != NULL)
 		free(philos->data);
