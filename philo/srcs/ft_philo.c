@@ -3,21 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   ft_philo.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 10:49:38 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/28 12:41:37 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/29 19:39:23 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-/* fork_release() function releases the forks held by a philosopher,
-** and it returns true if the philosopher is dead and cannot release
-** the forks, false otherwise.*/
-bool	fork_release(struct s_philo *philo, int forks)
+/* The choosing_fork() function is used to acquire the forks
+** based on their order, either first or second, to avoid deadlocks.*/
+static void	choosing_fork(t_philo *philo, int order)
 {
-	if (death_check(philo) == true)
+	if (order == FIRST)
+	{
+		if (philo->left_fork < philo->right_fork)
+			pthread_mutex_lock(&philo->forks[philo->left_fork]);
+		else
+			pthread_mutex_lock(&philo->forks[philo->right_fork]);
+	}
+	else if (order == SECOND)
+	{
+		if (philo->left_fork < philo->right_fork)
+			pthread_mutex_lock(&philo->forks[philo->right_fork]);
+		else
+			pthread_mutex_lock(&philo->forks[philo->left_fork]);
+	}
+}
+
+/* fork_release() function releases the forks held by a philosopher,
+** if the one is dead. It returns true if the philosopher is dead and
+** has released the forks, false otherwise.*/
+static bool	fork_release(struct s_philo *philo, int forks)
+{
+	if (exit_check(philo) == true)
 	{
 		if (philo->left_fork < philo->right_fork)
 		{
@@ -37,35 +57,17 @@ bool	fork_release(struct s_philo *philo, int forks)
 	return (false);
 }
 
-/* The choosing_fork() function is used to acquire the forks
-** based on their order, either first or second, to avoid deadlocks.*/
-void	choosing_fork(t_philo *philo, int order)
-{
-	if (order == FIRST)
-	{
-		if (philo->left_fork < philo->right_fork)
-			pthread_mutex_lock(&philo->forks[philo->left_fork]);
-		else
-			pthread_mutex_lock(&philo->forks[philo->right_fork]);
-	}
-	else if (order == SECOND)
-	{
-		if (philo->left_fork < philo->right_fork)
-			pthread_mutex_lock(&philo->forks[philo->right_fork]);
-		else
-			pthread_mutex_lock(&philo->forks[philo->left_fork]);
-	}
-}
-
 /* The ft_eating() function is called by each philosopher to perform
 ** their eating action. It locks one fork, waits for the other fork
-** to be available, and then prints a message that they have picked
-** up both forks and they are eating. After that, it updates the eat
-** times of the philosopher and unlocks the forks.*/
-bool	ft_eating(t_philo *philo)
+** to be available, and then prints a message that they have picked up
+** both forks and they are eating. After that, it updates the
+** last_meal parameter and the eat_times parameter of the philosopher
+** (if this last one was set). Finally it calls smart_sleep function
+** to simulate eating time and then unlocks the forks.*/
+static bool	ft_eating(t_philo *philo)
 {
 	choosing_fork(philo, FIRST);
-	if (fork_release(philo, 1) == true)
+	if (fork_release(philo, FIRST) == true)
 		return (EXIT_FAILURE);
 	excluded_printf(philo, FORK);
 	if (philo->data->philosophers == 1)
@@ -74,7 +76,7 @@ bool	ft_eating(t_philo *philo)
 		return (EXIT_FAILURE);
 	}
 	choosing_fork(philo, SECOND);
-	if (fork_release(philo, 2) == true)
+	if (fork_release(philo, SECOND) == true)
 		return (EXIT_FAILURE);
 	excluded_printf(philo, FORK);
 	excluded_printf(philo, EAT);
@@ -82,7 +84,7 @@ bool	ft_eating(t_philo *philo)
 	if (philo->eat_times != -1)
 		philo->eat_times++;
 	pthread_mutex_unlock(&philo->data->mutexes[READ]);
-	philo->last_eat = get_time();
+	philo->last_meal = get_time();
 	smart_sleep(philo->data->time_to_eat, philo);
 	pthread_mutex_unlock(&philo->forks[philo->left_fork]);
 	pthread_mutex_unlock(&philo->forks[philo->right_fork]);
@@ -91,8 +93,10 @@ bool	ft_eating(t_philo *philo)
 
 /* ft_philo() function is the main function that runs for each philosopher.
 ** If the philosopher's ID is even, it waits for 60 milliseconds before starting
-** the while loop. Then, it calls ft_eating(), followed by sleeping and thinking
-** until the philosopher is dead.*/
+** the while loop to avoid deadlocks. Then, it calls ft_eating(), followed by
+** sleeping and thinking actions until the philosopher is dead. The only reason
+** I'm using 60 milliseconds usleep is because the subject precised it as the
+** minimum value for time_to_die, sleep and eat variables.*/
 void	*ft_philo(void *data)
 {
 	t_philo	*philo;
@@ -103,15 +107,15 @@ void	*ft_philo(void *data)
 		excluded_printf(philo, THINK);
 		usleep(60000);
 	}
-	while (death_check(philo) == false)
+	while (exit_check(philo) == false)
 	{
 		if (ft_eating(philo) == EXIT_FAILURE)
-			return (0);
+			return (EXIT_SUCCESS);
 		excluded_printf(philo, SLEEP);
 		smart_sleep(philo->data->time_to_sleep, philo);
 		if (philo->data->philosophers % 2 == 1)
 			usleep(1000);
 		excluded_printf(philo, THINK);
 	}
-	return (0);
+	return (EXIT_SUCCESS);
 }

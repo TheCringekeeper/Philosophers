@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:49:24 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/28 10:53:14 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/29 20:13:37 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 typedef enum e_mutexes
 {
 	READ,
-	DEAD,
+	EXIT,
 	M_NUM
 }	t_mutexes;
 
@@ -37,7 +37,7 @@ typedef enum e_mutexes
 
 typedef pthread_mutex_t	t_mutex;
 
-/* data that never changes */
+/* Data shared by all philosophers.*/
 typedef struct s_data {
 	u_int64_t	sim_start;
 	int			philosophers;
@@ -49,9 +49,9 @@ typedef struct s_data {
 	t_mutex		*mutexes;
 }				t_data;
 
-/* t_data is just to access data any time */
+/* Personal data of each philosopher.*/
 typedef struct s_philo {
-	u_int64_t	last_eat;
+	u_int64_t	last_meal;
 	int			id;
 	int			eat_times;
 	int			left_fork;
@@ -60,34 +60,32 @@ typedef struct s_philo {
 	t_data		*data;
 }				t_philo;
 
-///////////////////////init/////////////////////
+///////////////////////free/////////////////////
+void		free_everything(t_philo *philos);
 
-t_mutex		*init_mutexes(void);
+//////////////////////ft_atoi///////////////////
+long long	ft_atoi(const char *nbr);
+
+/////////////////////ft_philo///////////////////
+void		*ft_philo(void *data);
+
+///////////////////////init/////////////////////
 t_philo		*init_struct(int ac, char *av[]);
 
-//////////////////////threads///////////////////
-
-void		*ft_philo(void *data);
+////////////////////monitoring//////////////////
 void		*meal_monitoring(void *data);
 void		*death_monitoring(void *data);
 
 ///////////////////////time/////////////////////
-
 u_int64_t	get_time(void);
 u_int64_t	timestamp(u_int64_t sim_start);
 void		smart_sleep(u_int64_t time, t_philo *philo);
 
-//////////////////////ft_atoi///////////////////
-
-long long	ft_atoi(const char *nptr);
-void		free_everything(t_philo *philos);
-
 ///////////////////////utils////////////////////
-
+void		print_death(t_philo *philo);
 void		excluded_printf(t_philo *philo, char *code);
-void		final_print(t_philo *philo);
 bool		someone_starved(t_philo philo, u_int64_t time_to_die);
-bool		death_check(t_philo *philo);
+bool		exit_check(t_philo *philo);
 void		kill_philo(t_philo *philo);
 
 #endif

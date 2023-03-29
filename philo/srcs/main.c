@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:46:31 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/28 11:15:58 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/03/29 20:00:10 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-/* ft_mutex_destroy function destroys all mutexes created by the program */
+/* ft_mutex_destroy function destroys all mutexes created by the program.*/
 void	ft_mutex_destroy(t_philo *philo)
 {
 	int	i;
@@ -36,8 +36,8 @@ void	init_pthreads(t_philo *philos)
 	pthread_t	kill;
 	pthread_t	eat;
 
-	kill = -1;
-	eat = -2;
+	kill = 1;
+	eat = 2;
 	id = malloc(sizeof(pthread_t) * philos->data->philosophers);
 	if (id == NULL)
 		return ;
@@ -47,7 +47,6 @@ void	init_pthreads(t_philo *philos)
 	pthread_create(&kill, 0, death_monitoring, (void *)philos);
 	if (philos->data->must_eat != -1)
 		pthread_create(&eat, 0, meal_monitoring, (void *)philos);
-	usleep(1000);
 	index = -1;
 	while (++index < philos->data->philosophers)
 		pthread_join(id[index], 0);

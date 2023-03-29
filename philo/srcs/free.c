@@ -13,7 +13,7 @@
 #include "philo.h"
 
 /* free_everything function is responsible for freeing all
-** dynamically allocated memory in the program */
+** dynamically allocated memory in the program.*/
 void	free_everything(t_philo *philos)
 {
 	if (philos != NULL && philos->data != NULL && philos->data->mutexes != NULL)
