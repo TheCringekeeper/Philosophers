@@ -49,8 +49,14 @@ CC				= cc
 CFLAGS			+= -Wall
 CFLAGS			+= -Wextra
 CFLAGS			+= -Werror
-# CFLAGS			+= -fsanitize=address
-# CFLAGS			+= -fsanitize=thread
+#### SPECIAL MODE ####
+MODE			= 0
+ifeq ($(MODE), thread)
+	CFLAGS += -g -fsanitize=thread
+endif
+ifeq ($(MODE), address)
+	CFLAGS += -g -fsanitize=address
+endif
 
 SMAKE		= make --no-print-directory
 
