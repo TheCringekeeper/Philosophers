@@ -1,14 +1,27 @@
-# Philosophers - 42 school project - validated at 100%
+# Philosophers - 42 school project
+# Grade: 100/100
 This project is a training to multi-threads/multi-process programming with the use of mutex and semaphore.  
 It contains 3 different programs simulating a twist of the famous Dining Philosophers problem, all with the same basic rules.  
 This project is also a good lesson in C optimization as we need to save every bit of CPU usage we can to ensure the survival of our philosophers.
 
-**philo_one:** multi-threads and use of mutex  
-**philo_two:** multi-threads and use of semaphore  
-**philo_three:** multi-processes and use of semaphore
-
 **If you are a 42 student visiting this project, please do not copy/paste and make sure to always understand the code you are writing.**
 
+# Usage
+
+Git clone the repository and cd into philo/
+Then use ```make``` to compile and run it with:
+
+```shell
+./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]
+```
+
+The arguments must be integers between 0 and INT_MAX representing a time in milliseconds. For example:
+
+```shell
+./philo 5 800 200 200 7
+```
+
+If the arguments are valid, the program will output the actions of each philosopher until one of them dies or until all of them have eaten number_of_times_each_philo_must_eat, if specified.
 
 # Rules
 ```
