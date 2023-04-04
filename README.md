@@ -10,6 +10,7 @@ This project is also a good lesson in C optimization as we need to save every bi
 # Usage
 
 Git clone the repository and cd into philo/
+
 Then use ```make``` to compile and run it with:
 
 ```shell
