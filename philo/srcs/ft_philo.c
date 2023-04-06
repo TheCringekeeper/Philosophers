@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_philo.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 10:49:38 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/29 19:39:23 by marvin           ###   ########.fr       */
+/*   Updated: 2023/04/06 15:39:34 by ankhabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ static bool	ft_eating(t_philo *philo)
 ** minimum value for time_to_die, sleep and eat variables.*/
 void	*ft_philo(void *data)
 {
+	u_int64_t time_to_think;
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
@@ -107,6 +108,7 @@ void	*ft_philo(void *data)
 		excluded_printf(philo, THINK);
 		usleep(60000);
 	}
+	time_to_think = philo->data->time_to_eat - philo->data->time_to_sleep + 1;
 	while (exit_check(philo) == false)
 	{
 		if (ft_eating(philo) == EXIT_FAILURE)
@@ -116,6 +118,7 @@ void	*ft_philo(void *data)
 		if (philo->data->philosophers % 2 == 1)
 			usleep(1000);
 		excluded_printf(philo, THINK);
+		smart_sleep(time_to_think, philo);
 	}
 	return (EXIT_SUCCESS);
 }
