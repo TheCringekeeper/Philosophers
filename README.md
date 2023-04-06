@@ -25,6 +25,11 @@ The arguments must be integers between 0 and INT_MAX representing a time in mill
 
 If the arguments are valid, the program will output the actions of each philosopher until one of them dies or until all of them have eaten number_of_times_each_philo_must_eat, if specified.
 
+To copy all output run:
+```
+./philo 5 800 200 200 7 | xclip -selection clipboard
+```
+
 # Rules
 ```
 • This project is to be coded in C, following the 42 Norm. Any leak, crash, undefined
