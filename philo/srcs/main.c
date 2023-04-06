@@ -6,24 +6,11 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:46:31 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/29 20:00:10 by marvin           ###   ########.fr       */
+/*   Updated: 2023/04/07 01:10:10 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-/* ft_mutex_destroy function destroys all mutexes created by the program.*/
-void	ft_mutex_destroy(t_philo *philo)
-{
-	int	i;
-
-	i = -1;
-	while (++i < philo->data->philosophers)
-		pthread_mutex_destroy(&philo->forks[i]);
-	i = -1;
-	while (++i < M_NUM)
-		pthread_mutex_destroy(&philo->data->mutexes[i]);
-}
 
 /* init_pthreads function creates the pthreads for each philosopher,
 ** as well as the pthreads for monitoring their deaths and their meals.

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_philo.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ankhabar <ankhabar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 10:49:38 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/04/06 15:39:34 by ankhabar         ###   ########.fr       */
+/*   Updated: 2023/04/07 01:22:21 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,8 @@ static bool	ft_eating(t_philo *philo)
 	pthread_mutex_lock(&philo->data->mutexes[READ]);
 	if (philo->eat_times != -1)
 		philo->eat_times++;
-	pthread_mutex_unlock(&philo->data->mutexes[READ]);
 	philo->last_meal = get_time();
+	pthread_mutex_unlock(&philo->data->mutexes[READ]);
 	smart_sleep(philo->data->time_to_eat, philo);
 	pthread_mutex_unlock(&philo->forks[philo->left_fork]);
 	pthread_mutex_unlock(&philo->forks[philo->right_fork]);
@@ -99,7 +99,6 @@ static bool	ft_eating(t_philo *philo)
 ** minimum value for time_to_die, sleep and eat variables.*/
 void	*ft_philo(void *data)
 {
-	u_int64_t time_to_think;
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
@@ -108,7 +107,6 @@ void	*ft_philo(void *data)
 		excluded_printf(philo, THINK);
 		usleep(60000);
 	}
-	time_to_think = philo->data->time_to_eat - philo->data->time_to_sleep + 1;
 	while (exit_check(philo) == false)
 	{
 		if (ft_eating(philo) == EXIT_FAILURE)
@@ -117,8 +115,10 @@ void	*ft_philo(void *data)
 		smart_sleep(philo->data->time_to_sleep, philo);
 		if (philo->data->philosophers % 2 == 1)
 			usleep(1000);
+		else
+			usleep(100);
 		excluded_printf(philo, THINK);
-		smart_sleep(time_to_think, philo);
+		smart_sleep(philo->data->time_to_think, philo);
 	}
 	return (EXIT_SUCCESS);
 }

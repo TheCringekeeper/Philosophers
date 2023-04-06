@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 20:55:05 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/29 19:39:00 by marvin           ###   ########.fr       */
+/*   Updated: 2023/04/06 23:51:05 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,9 @@ static t_data	*input_scanner(int ac, char *av[])
 	data->time_to_die = ft_atoi(av[2]);
 	data->time_to_eat = ft_atoi(av[3]);
 	data->time_to_sleep = ft_atoi(av[4]);
+	data->time_to_think = (data->time_to_eat - data->time_to_sleep + 1);
+	if (data->time_to_think < 0)
+		data->time_to_think = 0;
 	if (ac == 6)
 		data->must_eat = ft_atoi(av[5]);
 	data->mutexes = init_mutexes();

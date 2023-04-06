@@ -12,6 +12,19 @@
 
 #include "philo.h"
 
+/* ft_mutex_destroy function destroys all mutexes created by the program.*/
+void	ft_mutex_destroy(t_philo *philo)
+{
+	int	i;
+
+	i = -1;
+	while (++i < philo->data->philosophers)
+		pthread_mutex_destroy(&philo->forks[i]);
+	i = -1;
+	while (++i < M_NUM)
+		pthread_mutex_destroy(&philo->data->mutexes[i]);
+}
+
 /* free_everything function is responsible for freeing all
 ** dynamically allocated memory in the program.*/
 void	free_everything(t_philo *philos)

@@ -25,7 +25,7 @@ vpath %.c $(PATH_SRCS)
 ###########################################################
 #### VALGRIND
 
-VALGRIND	+= valgrind
+VALGRIND	+= valgrind -q
 VALGRIND	+= --track-origins=yes
 VALGRIND	+= --leak-check=full
 VALGRIND	+= --show-leak-kinds=all

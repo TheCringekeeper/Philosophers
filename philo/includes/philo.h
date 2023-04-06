@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:49:24 by ankhabar          #+#    #+#             */
-/*   Updated: 2023/03/29 20:13:37 by marvin           ###   ########.fr       */
+/*   Updated: 2023/04/07 01:11:16 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef struct s_data {
 	long long	time_to_die;
 	long long	time_to_eat;
 	long long	time_to_sleep;
+	long long	time_to_think;
 	bool		should_exit;
 	int			must_eat;
 	t_mutex		*mutexes;
@@ -61,6 +62,7 @@ typedef struct s_philo {
 }				t_philo;
 
 ///////////////////////free/////////////////////
+void		ft_mutex_destroy(t_philo *philo);
 void		free_everything(t_philo *philos);
 
 //////////////////////ft_atoi///////////////////
